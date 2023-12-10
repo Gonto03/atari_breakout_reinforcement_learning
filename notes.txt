@@ -1,1 +1,9 @@
 repeat_action_probability
+
+DQN: Deep Q Network -> CNN treinada com variante de Q-learning
+input = raw pixels
+output = função VALUE estimadora de rewards futuros
+
+hyper parametros:
+- Learning Rate (step size)
+- Discount factor (determina importancia de rewards futuros)
