@@ -1,1 +1,4 @@
-repeat_action_probability
+repeat_action_probability:
+Probability of the previously executed action being used as the next action,
+instead of an action being chosen and passed to the environment.
+These so-called sticky actions are a way of introducing stochasticity into otherwise deterministic environments, largely for benchmarking.
