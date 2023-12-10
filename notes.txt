@@ -7,3 +7,4 @@ output = função VALUE estimadora de rewards futuros
 hyper parametros:
 - Learning Rate (step size)
 - Discount factor (determina importancia de rewards futuros)
+- condições iniciais (Q0)
