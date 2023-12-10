@@ -1,4 +1,21 @@
+<<<<<<< HEAD
 repeat_action_probability:
 Probability of the previously executed action being used as the next action,
 instead of an action being chosen and passed to the environment.
 These so-called sticky actions are a way of introducing stochasticity into otherwise deterministic environments, largely for benchmarking.
+=======
+repeat_action_probability:
+Probability of the previously executed action being used as the next action,
+instead of an action being chosen and passed to the environment.
+These so-called sticky actions are a way of introducing stochasticity into otherwise deterministic environments, largely for benchmarking.
+
+
+DQN: Deep Q Network -> CNN treinada com variante de Q-learning
+input = raw pixels
+output = função VALUE estimadora de rewards futuros
+
+hyper parametros:
+- Learning Rate (step size)
+- Discount factor (determina importancia de rewards futuros)
+- condições iniciais (Q0)
+>>>>>>> 1620dd770fac8cc86882ce63a98ae97f1046ebdb
