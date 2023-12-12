@@ -31,7 +31,7 @@ obs, reward, terminated, truncated, info = env.step(1)  #obs=3Darray(width, heig
 #reward: red=7,orange=7,yellow=4,green=4,light blue=1,blue=1
 #info = number of lifes, current frame
 
-print(obs[75][100])
+# print(obs[75][100])
 
 #shows current frame
 plt.figure(figsize=(8, 8))
