@@ -21,8 +21,9 @@ class CustomRewardBreakout(Wrapper):
         # Perform the action in the original environment
         observation, reward, done, _, info = self.env.step(action)
         if info['lives'] != n_lives:
-            reward -= 10
-        
+            reward -= 10        # reward de -10 atribuída ao agente quando este perde uma vida
+        if reward > 0:          # se algum bloco foi partido, verificar quais as coordenadas deste
+            pass################################
 
         return observation, reward, done, info
 
