@@ -39,17 +39,32 @@ plt.imshow(obs)
 '''
 
 #play the game
-total_reward = 0
-while True:
-    #event = keyboard.read_event()   #returns -1 if key is not on keybinds
-    #if keybinds.get(event.name, -1) != -1:
-    #    obs, reward, terminated, truncated, info = env.step(keybinds.get(event.name, -1))
-    action, _states = model.predict(obs)
-    obs, reward, terminated, truncated, info = env.step(action)
-    total_reward += reward
-    if terminated or truncated:
-        obs, info = env.reset()
-    env.render()
 
+episodes = 100
+
+for _ in range(episodes):
+    state = env.reset()
+    terminated = False
+    score = 0
+    observation, reward, terminated, truncated, info = env.step(1)  # start game
+    n_lives = info['lives']
+
+    while not terminated:
+        action, _states = model.predict(obs)     # choose between noop, move left and move right
+        obs, reward, terminated, truncated, info = env.step(action)
+        # print(f"observation: {observation}")
+        # print(f"reward: {reward}")
+        # print(f"terminated: {terminated}")
+        # print(f"truncated: {truncated}")
+        # print(f"info: {info}")
+        score += reward
+        if info['lives'] == 0:
+            break
+        if n_lives != info['lives']:
+            obs, reward, terminated, truncated, info = env.step(1)   # after losing a life, restarts the game
+            n_lives = info['lives']
+        env.render()
+    
+    print(f"Episode {_+1}\n Score: {score}")
 env.reset()
 env.close()
