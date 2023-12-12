@@ -18,3 +18,7 @@ our changes:
 
 NÃO CONSEGUIMOS:
 - diferenciar as pontuações por cores de cada bloco. tentámos soluções de computer vision mas não conseguimos selecionar os blocos. 
+
+
+
+OBSERVAÇÕES:

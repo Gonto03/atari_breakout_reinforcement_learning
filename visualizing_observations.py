@@ -23,8 +23,12 @@ model = DQN.load("dqn_breakout")
 def see_observation(observation):
     for i in range(210):
         for j in range(160):
-            print(f"{i},{j}: {observation[i][j]}")
-    
+            obs = observation[i][j]
+            is_black = [True if obs[i]==0 else False for i in range(3)]     # [0,0,0]: preto
+            is_grey = [True if obs[i]==142 else False for i in range(3)]      # [142,142,142]: cinzento
+            if not all(is_black) and not all(is_grey):      # verifica os píxeis que não são pretos ou cinzentos
+                print(f"({i},{j}): {observation[i][j]}")
+            
 see_observation(observation)
 
 # for _ in range(episodes):
