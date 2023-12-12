@@ -13,14 +13,19 @@ import stable_baselines3
 from stable_baselines3 import DQN
 
 
-env = gymnasium.make("ALE/Breakout-v5", render_mode='human', full_action_space=False,
+env = gymnasium.make("ALE/Breakout-v5", render_mode="human", full_action_space=False,
                repeat_action_probability=0.1,obs_type='rgb')
 observation, info = env.reset()
 
-model = DQN("MlpPolicy", env, learning_rate=0.001, buffer_size=100000, verbose=1)
-model.learn(total_timesteps=1000, log_interval=10)
+def training():
+    model = DQN("CnnPolicy", env, learning_rate=0.001, buffer_size=100000, verbose=1)
+    model.learn(total_timesteps=5000, log_interval=4, progress_bar=True, reset_num_timesteps=False)
+    model.save("dqn_breakout")
 
-episodes = 10
+training()
+
+model = DQN.load("dqn_breakout")
+episodes = 2
 
 for _ in range(episodes):
     observation, info = env.reset()
@@ -30,7 +35,6 @@ for _ in range(episodes):
     n_lives = info['lives']
     
     while not terminated:
-        # action = random.choice([0,2,3])     # choose between noop, move left and move right
         action, _states = model.predict(observation, deterministic=True)
         observation, reward, terminated, truncated, info = env.step(action)
         # print(f"observation: {observation}")

@@ -15,3 +15,6 @@ hyper parametros:
 
 our changes:
 - changing color scoring
+
+NÃO CONSEGUIMOS:
+- diferenciar as pontuações por cores de cada bloco. tentámos soluções de computer vision mas não conseguimos selecionar os blocos. 
