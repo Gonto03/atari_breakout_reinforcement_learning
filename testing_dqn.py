@@ -22,7 +22,7 @@ def training():
     model.learn(total_timesteps=400000, log_interval=10, progress_bar=True, reset_num_timesteps=False)
     model.save("dqn_breakout")
 
-training()
+# training()
 
 model = DQN.load("dqn_breakout")
 episodes = 10
