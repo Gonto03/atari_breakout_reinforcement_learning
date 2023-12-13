@@ -13,25 +13,46 @@ import random
 import stable_baselines3
 from stable_baselines3 import DQN
 
+
 def get_broken_block_coordinates(prev_obs, cur_obs):
-    for i in range():
-        for j in range():
+    for i in range(57,93):
+        for j in range(8,152):
             aux = [True if prev_obs[i][j][l]==cur_obs[i][j][l] else False for l in range(3)]
-            ######################################################
+            if not all(aux):    # checks if a pixel has the same color as in the previous observation
+                return (i,j)
+                
+def get_block_color(rgb):
+    match rgb[0]:
+        case 66:
+            return 'blue'
+        case 72:
+            return 'green'
+        case 162:
+            return 'yellow'
+        case 180:
+            return 'low_orange'
+        case 198:
+            return 'high_orange'
+        case 200:
+            return 'red'
+        case _:
+            raise ValueError(f"Invalid color code: {rgb}")
+    
 
 class CustomRewardBreakout(Wrapper):
     def __init__(self, env):
         super(CustomRewardBreakout, self).__init__(env)
 
     def step(self, prev_obs, n_lives, action):
+        rewards = {'blue':1, 'green':3, 'yellow':5, 'low_orange':7, 'high_orange':9, 'red':11}   # color-reward map
         # Perform the action in the original environment
         observation, reward, done, _, info = self.env.step(action)
         if info['lives'] != n_lives:
-            reward -= 10        # reward de -10 atribuída ao agente quando este perde uma vida
+            reward -= 12        # reward de -12 atribuída ao agente quando este perde uma vida
         if reward > 0:          # se algum bloco foi partido, verificar quais as coordenadas deste
-            _ = get_broken_block_coordinates(prev_obs, observation)
-            pass################################
-
+            i,j = get_broken_block_coordinates(prev_obs, observation)   # obter coordenadas do bloco destruído
+            color = get_block_color(observation[i][j])      # obter a cor do bloco destruído
+            reward = rewards[color]           # atribuir o valor de reward modificado correspondente
         return observation, reward, done, info
 
 # Create the Breakout environment
