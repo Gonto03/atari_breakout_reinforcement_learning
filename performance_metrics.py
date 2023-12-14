@@ -10,6 +10,28 @@ from stable_baselines3.common.results_plotter import load_results, ts2xy
 from stable_baselines3.common.noise import NormalActionNoise
 from stable_baselines3.common.callbacks import BaseCallback
 
+class CustomMonitor(Monitor):
+    def __init__(self, env, log_dir, **kwargs):
+        super(CustomMonitor, self).__init__(env, log_dir, **kwargs)
+        self.log_dir = log_dir
+
+    def close(self):
+        super(CustomMonitor, self).close()
+        self.plot_results()
+
+    def plot_results(self):
+        x, y = ts2xy(load_results(self.log_dir[:-1]), 'timesteps')
+
+        if len(x) > 0:
+            plt.plot(x, y, label='DQN')
+            plt.xlabel('Timesteps')
+            plt.ylabel('Mean Reward')
+            plt.title('Training Curve')
+            plt.legend()
+            plt.show()
+
+
+
 class SaveTrainingResults(BaseCallback):
     """
     Callback for saving a model (the check is done every ``check_freq`` steps)
@@ -48,11 +70,11 @@ class SaveTrainingResults(BaseCallback):
                     )
 
                 # New best model, you could save the agent here
-                if mean_reward > self.best_mean_reward:
-                    self.best_mean_reward = mean_reward
-                    # Example for saving best model
-                    if self.verbose > 0:
-                        print(f"Saving new best model to {self.save_path}.zip")
-                    self.model.save(self.save_path)
+                # if mean_reward > self.best_mean_reward:
+                #     self.best_mean_reward = mean_reward
+                #     # Example for saving best model
+                #     if self.verbose > 0:
+                #         print(f"Saving new best model to {self.save_path}.zip")
+                #     self.model.save(self.save_path)
 
         return True
