@@ -43,7 +43,7 @@ class CustomRewardBreakout(Wrapper):
     def __init__(self, env):
         super(CustomRewardBreakout, self).__init__(env)
 
-    def _step(self, prev_obs, n_lives, action):
+    def step(self, prev_obs, n_lives, action):
         rewards = {'blue': 1, 'green': 3, 'yellow': 5, 'low_orange': 7, 'high_orange': 9, 'red': 11}   # color-reward map
         # Perform the action in the original environment
         observation, reward, done, _, info = self.env.step(action)
@@ -54,3 +54,43 @@ class CustomRewardBreakout(Wrapper):
             color = get_block_color(prev_obs[i][j])      # obtaining the broken block's color
             reward = rewards[color]       # assigning the modified reward to the broken block based on its color
         return observation, reward, done, info
+
+# Create the Breakout environment
+env = gymnasium.make("ALE/Breakout-v5", render_mode='human', full_action_space=False,
+               repeat_action_probability=0.1,obs_type='rgb')
+observation, info = env.reset()
+
+# Wrap the environment with your custom reward wrapper
+env = CustomRewardBreakout(env)
+
+def training():
+    model = DQN("CnnPolicy", env, learning_rate=0.001, buffer_size=10000, verbose=1)
+    model.learn(total_timesteps=1000, log_interval=10, progress_bar=True, reset_num_timesteps=False)
+    model.save("../dqn_breakout")
+
+def testing():
+    model = DQN.load("../dqn_breakout")
+    episodes = 5
+
+    for _ in range(episodes):
+        observation, info = env.reset()
+        terminated = False
+        score = 0
+        n_lives = info['lives']
+        observation, reward, terminated, info = env.step(observation,n_lives,1)  # start game
+        
+        while not terminated:
+            action, _states = model.predict(observation, n_lives, deterministic=True)
+            observation, reward, terminated, info = env.step(observation,n_lives,action)
+            score += reward
+            if info['lives'] == 0:
+                break
+            if n_lives != info['lives']:
+                observation, reward, terminated, info = env.step(observation,n_lives,1)   # after losing a life, restarts the game
+                n_lives = info['lives']
+            env.render()
+            
+        print(f"Episode {_+1}\n Score: {score}")
+
+training()
+testing()

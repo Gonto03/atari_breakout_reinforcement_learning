@@ -3,6 +3,7 @@ import os
 import gymnasium as gym
 import numpy as np
 import matplotlib.pyplot as plt
+import time
 
 from stable_baselines3 import TD3
 from stable_baselines3.common.monitor import Monitor
@@ -12,15 +13,15 @@ from stable_baselines3.common.callbacks import BaseCallback
 
 class CustomMonitor(Monitor):
     def __init__(self, env, log_dir, **kwargs):
-        super(CustomMonitor, self).__init__(env, log_dir, **kwargs)
         self.log_dir = log_dir
+        super(CustomMonitor, self).__init__(env, log_dir, **kwargs)
 
     def close(self):
         super(CustomMonitor, self).close()
         self.plot_results()
 
     def plot_results(self):
-        x, y = ts2xy(load_results(self.log_dir[:-1]), 'timesteps')
+        x, y = ts2xy(load_results(self.log_dir), 'timesteps')
 
         if len(x) > 0:
             plt.plot(x, y, label='DQN')
@@ -29,6 +30,7 @@ class CustomMonitor(Monitor):
             plt.title('Training Curve')
             plt.legend()
             plt.show()
+
 
 
 

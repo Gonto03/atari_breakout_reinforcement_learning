@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 import numpy as np
 import seaborn as sns
-from tqdm import tqdm
 import random
 
 import stable_baselines3
@@ -44,7 +43,7 @@ def testing():
         observation, info = env.reset()
         terminated = False
         score = 0
-        observation, reward, terminated, truncated, info = env.step(1)  # start game
+        observation, reward, terminated, truncated, info = env.step(action=1)  # start game
         n_lives = info['lives']
         
         while not terminated:
@@ -54,7 +53,7 @@ def testing():
             if info['lives'] == 0:
                 break
             if n_lives != info['lives']:
-                observation, reward, terminated, truncated, info = env.step(1)   # after losing a life, restarts the game
+                observation, reward, terminated, truncated, info = env.step(action=1)   # after losing a life, restarts the game
                 n_lives = info['lives']
             env.render()
             
