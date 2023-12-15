@@ -3,25 +3,18 @@ import gymnasium
 from gymnasium import Wrapper
 import sys
 sys.modules["gym"] = gymnasium
-from collections import defaultdict
-import matplotlib.pyplot as plt
-from matplotlib.patches import Patch
-import seaborn as sns
-from tqdm import tqdm
-import random
-
-import stable_baselines3
-from stable_baselines3 import DQN
 
 
+#  Given two consecutive game pixel maps (one being immediately before a block is broken and the other being immediately after),
+# this function returns the coordinates of upper left pixel of the broken block
 def get_broken_block_coordinates(prev_obs, cur_obs):
-    for i in range(57,93):
-        for j in range(8,152):
-            aux = [True if prev_obs[i][j][l]==cur_obs[i][j][l] else False for l in range(3)]
+    for i in range(57,93):          #   These values are all the possible ones that can be the coordinates of the game's blocks
+        for j in range(8,152):      # and were obtained in "visualizing_observations.py".
+            aux = [True if prev_obs[i][j][l]==cur_obs[i][j][l] else False for l in range(3)]    # list that contains 3 boolean values; each one represents whether a pixel's RGB value is the same as in the previous observation  
             if not all(aux):    # checks if a pixel has the same color as in the previous observation
-                return (i,j)
+                return (i,j)    # if not, it means this pixel belongs to a broken block; its coordinates are returned
                 
-def get_block_color(rgb):
+def get_block_color(rgb):   # given a pixel's RGB code, it returns the corresponding color
     match rgb[0]:
         case 66:
             return 'blue'
@@ -39,7 +32,7 @@ def get_block_color(rgb):
             raise ValueError(f"Invalid color code: {rgb}")
     
 
-class CustomRewardBreakout(Wrapper):
+class CustomRewardBreakout(Wrapper):    # our custom reward wrapper with a new step function that overrides the environment's original one
     def __init__(self, env):
         super(CustomRewardBreakout, self).__init__(env)
 

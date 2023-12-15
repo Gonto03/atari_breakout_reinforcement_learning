@@ -1,26 +1,22 @@
 import os
-
 import gymnasium as gym
 import numpy as np
 import matplotlib.pyplot as plt
-import time
 
-from stable_baselines3 import TD3
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.results_plotter import load_results, ts2xy
-from stable_baselines3.common.noise import NormalActionNoise
 from stable_baselines3.common.callbacks import BaseCallback
 
-class CustomMonitor(Monitor):
+class CustomMonitor(Monitor):     # monitor created by us that allows for training curve visualization
     def __init__(self, env, log_dir, **kwargs):
         self.log_dir = log_dir
         super(CustomMonitor, self).__init__(env, log_dir, **kwargs)
 
     def close(self):
         super(CustomMonitor, self).close()
-        self.plot_results()
+        self.plot_results_()
 
-    def plot_results(self):
+    def plot_results_(self):
         x, y = ts2xy(load_results(self.log_dir), 'timesteps')
 
         if len(x) > 0:
@@ -70,13 +66,5 @@ class SaveTrainingResults(BaseCallback):
                     print(
                         f"Best mean reward: {self.best_mean_reward:.2f} - Last mean reward per episode: {mean_reward:.2f}"
                     )
-
-                # New best model, you could save the agent here
-                # if mean_reward > self.best_mean_reward:
-                #     self.best_mean_reward = mean_reward
-                #     # Example for saving best model
-                #     if self.verbose > 0:
-                #         print(f"Saving new best model to {self.save_path}.zip")
-                #     self.model.save(self.save_path)
 
         return True
