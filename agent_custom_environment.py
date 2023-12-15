@@ -58,7 +58,7 @@ def testing():      # testing the trained model
     plt.plot(episode_idx, episode_scores, label='DQN')  # plotting the score for each episode
     plt.xlabel('Episodes')
     plt.ylabel('Total score')
-    plt.title('Training Curve')
+    plt.title('Testing: total score by episode')
     plt.legend()
     plt.show()
 
